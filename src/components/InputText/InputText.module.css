@@ -1,0 +1,11 @@
+.root {
+  padding-top: 15px;
+}
+
+.root:first-of-type {
+  padding-top: 0;
+}
+
+.input {
+  display: block;
+}
