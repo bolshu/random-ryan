@@ -29,16 +29,20 @@ const Home: FC = () => {
 
     setMembers((prev) =>
       prev.map((it) => {
-        if (id === it.id) {
-          return {
-            ...it,
-            value,
-          };
+        if (id !== it.id) {
+          return it;
         }
 
-        return it;
+        return {
+          ...it,
+          value,
+        };
       })
     );
+  }, []);
+
+  const handleRemoveMember = useCallback((id: number) => {
+    setMembers((prev) => [...prev.filter((it) => id !== it.id)]);
   }, []);
 
   return (
@@ -47,8 +51,10 @@ const Home: FC = () => {
         return (
           <InputText
             key={id}
+            id={id}
             defaultValue={value}
-            onChange={(value) => handleChangeMemberName(id, value)}
+            onChange={handleChangeMemberName}
+            onRemove={handleRemoveMember}
           />
         );
       })}

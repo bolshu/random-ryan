@@ -3,13 +3,24 @@ import { FC, ChangeEvent } from "react";
 import styles from "./InputText.module.css";
 
 export type InputTextProps = {
-  onChange: (value?: string) => void;
+  id: number;
+  onChange: (id: number, value?: string) => void;
+  onRemove: (id: number) => void;
   defaultValue?: string;
 };
 
-const InputText: FC<InputTextProps> = ({ defaultValue, onChange }) => {
+const InputText: FC<InputTextProps> = ({
+  id,
+  defaultValue,
+  onChange,
+  onRemove,
+}) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value);
+    onChange(id, e.target.value);
+  };
+
+  const handleRemove = () => {
+    onRemove(id);
   };
 
   return (
@@ -21,6 +32,7 @@ const InputText: FC<InputTextProps> = ({ defaultValue, onChange }) => {
         defaultValue={defaultValue}
         onChange={handleChange}
       />
+      <button onClick={handleRemove}>Remove</button>
     </div>
   );
 };
