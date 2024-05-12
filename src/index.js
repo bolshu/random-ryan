@@ -1,14 +1,24 @@
-const ROOT_NODE = document.querySelector("#app");
+const ADD_MEMBER_BUTTON_ID = "add-member-button";
+const ROOT_EL_ID = "app";
+
+const getRootNode = () => {
+  return document.getElementById(ROOT_EL_ID);
+};
 
 const appendElementToNode = (node, element) => {
   node.appendChild(element);
+};
+
+const insertElementBeforeNode = (node, element) => {
+  const parent = node.parentNode;
+  parent.insertBefore(element, node);
 };
 
 const getID = () => {
   return Date.now().toString();
 };
 
-const setStylePropToEl = (el, prop, value) => {
+const applyStylePropToEl = (el, prop, value) => {
   el.style[prop] = value;
 };
 
@@ -19,7 +29,14 @@ const getMemberNameInputEl = (id) => {
   el.setAttribute("placeholder", "Name of member");
   el.setAttribute("id", id);
 
-  setStylePropToEl(el, "display", "block");
+  applyStylePropToEl(el, "display", "block");
+  applyStylePropToEl(el, "padding", "5px");
+  applyStylePropToEl(el, "width", "calc(200px - 10px - 2px)");
+  applyStylePropToEl(el, "height", "20px");
+  applyStylePropToEl(el, "line-height", "20px");
+  applyStylePropToEl(el, "border-radius", "5px 0 0 5px");
+  applyStylePropToEl(el, "border", "1px solid lightgray");
+  applyStylePropToEl(el, "cursor", "pointer");
 
   return el;
 };
@@ -31,10 +48,16 @@ const handleDeleteMemberBtnClick = (id) => {
 const getDeleteMemberBtnEl = (id) => {
   const el = document.createElement("BUTTON");
 
-  el.textContent = "Remove member";
+  el.textContent = "✘";
 
-  setStylePropToEl(el, "display", "block");
-  setStylePropToEl(el, "margin-left", "5px");
+  applyStylePropToEl(el, "display", "block");
+  applyStylePropToEl(el, "line-height", "20px");
+  applyStylePropToEl(el, "border-radius", "0 5px 5px 0");
+  applyStylePropToEl(el, "border", "1px solid lightgray");
+  applyStylePropToEl(el, "border-left", "none");
+  applyStylePropToEl(el, "background-color", "white");
+  applyStylePropToEl(el, "color", "red");
+  applyStylePropToEl(el, "cursor", "pointer");
 
   el.addEventListener("click", () => {
     handleDeleteMemberBtnClick(id);
@@ -46,15 +69,17 @@ const getDeleteMemberBtnEl = (id) => {
 const makeMemberControl = () => {
   const ID = getID();
   const el = document.createElement("DIV");
+  const addmemberBtn = document.getElementById(ADD_MEMBER_BUTTON_ID);
 
-  setStylePropToEl(el, "display", "flex");
-  setStylePropToEl(el, "margin-bottom", "10px");
+  applyStylePropToEl(el, "display", "flex");
+  applyStylePropToEl(el, "margin-bottom", "10px");
 
   el.dataset.id = ID;
 
   appendElementToNode(el, getMemberNameInputEl(ID));
   appendElementToNode(el, getDeleteMemberBtnEl(ID));
-  appendElementToNode(ROOT_NODE, el);
+
+  insertElementBeforeNode(addmemberBtn, el);
 };
 
 const handleAddInputButtonClick = () => {
@@ -65,10 +90,53 @@ const makeAddInputButton = () => {
   const el = document.createElement("BUTTON");
 
   el.textContent = "Add member";
+  el.setAttribute("id", ADD_MEMBER_BUTTON_ID);
+
+  applyStylePropToEl(el, "display", "block");
+  applyStylePropToEl(el, "padding", "5px");
+  applyStylePropToEl(el, "width", "200px");
+  applyStylePropToEl(el, "line-height", "20px");
+  applyStylePropToEl(el, "border-radius", "5px");
+  applyStylePropToEl(el, "border", "none");
+  applyStylePropToEl(el, "background-color", "lightgray");
+  applyStylePropToEl(el, "cursor", "pointer");
 
   el.addEventListener("click", handleAddInputButtonClick);
 
-  appendElementToNode(ROOT_NODE, el);
+  appendElementToNode(getRootNode(), el);
+};
+
+const getRandomNumberFromRange = (number) => {
+  return Math.floor(Math.random() * number);
+};
+
+const handleSubmitButtonClick = () => {
+  const membersInputs = document.querySelectorAll("INPUT");
+  const membersInputsLength = membersInputs.length;
+  const winnerIdx = getRandomNumberFromRange(membersInputsLength);
+  const winnerName = membersInputs[winnerIdx].value;
+
+  return winnerName;
+};
+
+const makeSubmitButton = () => {
+  const el = document.createElement("BUTTON");
+
+  el.textContent = "Submit";
+
+  applyStylePropToEl(el, "display", "block");
+  applyStylePropToEl(el, "padding", "5px");
+  applyStylePropToEl(el, "margin-top", "10px");
+  applyStylePropToEl(el, "width", "200px");
+  applyStylePropToEl(el, "line-height", "20px");
+  applyStylePropToEl(el, "border-radius", "5px");
+  applyStylePropToEl(el, "border", "none");
+  applyStylePropToEl(el, "background-color", "lightgreen");
+  applyStylePropToEl(el, "cursor", "pointer");
+
+  el.addEventListener("click", handleSubmitButtonClick);
+
+  appendElementToNode(getRootNode(), el);
 };
 
 const makeHeading = () => {
@@ -76,12 +144,21 @@ const makeHeading = () => {
 
   el.textContent = "Random Ryan";
 
-  appendElementToNode(ROOT_NODE, el);
+  appendElementToNode(getRootNode(), el);
+};
+
+const makeRoot = () => {
+  const el = document.createElement("DIV");
+  el.setAttribute("id", ROOT_EL_ID);
+
+  appendElementToNode(document.body, el);
 };
 
 const initApp = () => {
+  makeRoot();
   makeHeading();
   makeAddInputButton();
+  makeSubmitButton();
 };
 
 initApp();
