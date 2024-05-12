@@ -1,5 +1,6 @@
 const ADD_MEMBER_BUTTON_ID = "add-member-button";
 const ROOT_EL_ID = "app";
+const WINNE_SCREEN_EL_ID = "winner-screen";
 const LOCAL_STORAGE_KEY = "random_ryan";
 
 const appendElementToNode = (node, element) => {
@@ -32,7 +33,16 @@ const saveMembersToLocalStorage = () => {
   localStorage.setItem(LOCAL_STORAGE_KEY, valuesAsString);
 };
 
+const removeWinnerScreen = () => {
+  const el = document.getElementById(WINNE_SCREEN_EL_ID);
+
+  if (el) {
+    el.remove();
+  }
+};
+
 const handleMemberInputChange = () => {
+  removeWinnerScreen();
   saveMembersToLocalStorage();
 };
 
@@ -61,12 +71,13 @@ const getMemberNameInputEl = (id, value) => {
   return el;
 };
 
-const deleteMemberControl = (id) => {
+const removeMemberControl = (id) => {
   document.querySelector(`[data-id="${id}"]`).remove();
 };
 
 const handleDeleteMemberBtnClick = (id) => {
-  deleteMemberControl(id);
+  removeWinnerScreen();
+  removeMemberControl(id);
   saveMembersToLocalStorage();
 };
 
@@ -108,6 +119,7 @@ const makeMemberControl = (value) => {
 };
 
 const handleAddInputButtonClick = () => {
+  removeWinnerScreen();
   makeMemberControl();
 };
 
@@ -158,8 +170,33 @@ const getWinnerName = () => {
   return winnerName;
 };
 
+const makeWinnerScreen = (name) => {
+  const el = document.createElement("DIV");
+
+  el.setAttribute("id", WINNE_SCREEN_EL_ID);
+
+  el.textContent = name;
+
+  applyStylePropToEl(el, "position", "fixed");
+  applyStylePropToEl(el, "width", "500px");
+  applyStylePropToEl(el, "height", "500px");
+  applyStylePropToEl(el, "top", "50%");
+  applyStylePropToEl(el, "left", "50%");
+  applyStylePropToEl(el, "transform", "translate(-50%, -50%)");
+  applyStylePropToEl(el, "text-align", "center");
+  applyStylePropToEl(el, "font-weight", "bold");
+  applyStylePropToEl(el, "font-size", "80px");
+  applyStylePropToEl(el, "line-height", "500px");
+
+  appendElementToNode(getRootNode(), el);
+};
+
 const handleSubmitButtonClick = () => {
-  console.log(getWinnerName());
+  removeWinnerScreen();
+
+  const winnerName = getWinnerName();
+
+  makeWinnerScreen(winnerName);
 };
 
 const makeSubmitButton = () => {
@@ -187,6 +224,8 @@ const makeHeading = () => {
 
   el.textContent = "Random Ryan";
 
+  applyStylePropToEl(el, "margin-top", "0");
+
   appendElementToNode(getRootNode(), el);
 };
 
@@ -194,10 +233,25 @@ const makeRoot = () => {
   const el = document.createElement("DIV");
   el.setAttribute("id", ROOT_EL_ID);
 
+  applyStylePropToEl(el, "position", "relative");
+  applyStylePropToEl(el, "box-sizing", "border-box");
+  applyStylePropToEl(el, "padding", "10px");
+  applyStylePropToEl(el, "width", "100%");
+  applyStylePropToEl(el, "min-height", "100vh");
+
   appendElementToNode(document.body, el);
 };
 
+const resetBodyStyles = () => {
+  const el = document.body;
+
+  applyStylePropToEl(el, "margin", "0");
+  applyStylePropToEl(el, "padding", "0");
+};
+
 const initApp = () => {
+  resetBodyStyles();
+
   makeRoot();
   makeHeading();
   makeAddInputButton();
