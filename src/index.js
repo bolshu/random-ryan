@@ -1,6 +1,7 @@
 const ADD_MEMBER_BUTTON_ID = "add-member-button";
 const ROOT_EL_ID = "app";
-const WINNE_SCREEN_EL_ID = "winner-screen";
+const WINNER_SCREEN_EL_ID = "winner-screen";
+const WINNER_COUNTER_EL_ID = "winner-counter";
 const LOCAL_STORAGE_KEY = "random_ryan";
 
 const appendElementToNode = (node, element) => {
@@ -12,8 +13,10 @@ const insertElementBeforeNode = (node, element) => {
   parent.insertBefore(element, node);
 };
 
-const applyStylePropToEl = (el, prop, value) => {
-  el.style[prop] = value;
+const applyStylesToEl = (el, styles) => {
+  for (const property in styles) {
+    el.style[property] = styles[property];
+  }
 };
 
 const getRootNode = () => {
@@ -34,7 +37,7 @@ const saveMembersToLocalStorage = () => {
 };
 
 const removeWinnerScreen = () => {
-  const el = document.getElementById(WINNE_SCREEN_EL_ID);
+  const el = document.getElementById(WINNER_SCREEN_EL_ID);
 
   if (el) {
     el.remove();
@@ -57,14 +60,18 @@ const getMemberNameInputEl = (id, value) => {
     el.setAttribute("value", value);
   }
 
-  applyStylePropToEl(el, "display", "block");
-  applyStylePropToEl(el, "padding", "5px");
-  applyStylePropToEl(el, "width", "calc(200px - 10px - 2px)");
-  applyStylePropToEl(el, "height", "20px");
-  applyStylePropToEl(el, "line-height", "20px");
-  applyStylePropToEl(el, "border-radius", "5px 0 0 5px");
-  applyStylePropToEl(el, "border", "1px solid lightgray");
-  applyStylePropToEl(el, "cursor", "pointer");
+  const styles = {
+    display: "block",
+    padding: "5px",
+    width: "calc(200px - 10px - 2px)",
+    height: "20px",
+    "line-height": "20px",
+    "border-radius": "5px 0 0 5px",
+    border: "1px solid lightgray",
+    cursor: "pointer",
+  };
+
+  applyStylesToEl(el, styles);
 
   el.addEventListener("change", handleMemberInputChange);
 
@@ -86,14 +93,18 @@ const getDeleteMemberBtnEl = (id) => {
 
   el.textContent = "✘";
 
-  applyStylePropToEl(el, "display", "block");
-  applyStylePropToEl(el, "line-height", "20px");
-  applyStylePropToEl(el, "border-radius", "0 5px 5px 0");
-  applyStylePropToEl(el, "border", "1px solid lightgray");
-  applyStylePropToEl(el, "border-left", "none");
-  applyStylePropToEl(el, "background-color", "white");
-  applyStylePropToEl(el, "color", "red");
-  applyStylePropToEl(el, "cursor", "pointer");
+  const styles = {
+    display: "block",
+    "line-height": "20px",
+    "border-radius": "0 5px 5px 0",
+    border: "1px solid lightgray",
+    "border-left": "none",
+    "background-color": "white",
+    color: "red",
+    cursor: "pointer",
+  };
+
+  applyStylesToEl(el, styles);
 
   el.addEventListener("click", () => {
     handleDeleteMemberBtnClick(id);
@@ -107,8 +118,12 @@ const makeMemberControl = (value) => {
   const el = document.createElement("DIV");
   const addmemberBtn = document.getElementById(ADD_MEMBER_BUTTON_ID);
 
-  applyStylePropToEl(el, "display", "flex");
-  applyStylePropToEl(el, "margin-bottom", "10px");
+  const styles = {
+    display: "flex",
+    "margin-bottom": "10px",
+  };
+
+  applyStylesToEl(el, styles);
 
   el.dataset.id = ID;
 
@@ -129,14 +144,18 @@ const makeAddInputButton = () => {
   el.textContent = "Add member";
   el.setAttribute("id", ADD_MEMBER_BUTTON_ID);
 
-  applyStylePropToEl(el, "display", "block");
-  applyStylePropToEl(el, "padding", "5px");
-  applyStylePropToEl(el, "width", "200px");
-  applyStylePropToEl(el, "line-height", "20px");
-  applyStylePropToEl(el, "border-radius", "5px");
-  applyStylePropToEl(el, "border", "none");
-  applyStylePropToEl(el, "background-color", "lightgray");
-  applyStylePropToEl(el, "cursor", "pointer");
+  const styles = {
+    display: "block",
+    padding: "5px",
+    width: "200px",
+    "line-height": "20px",
+    "border-radius": "5px",
+    border: "none",
+    "background-color": "lightgray",
+    cursor: "pointer",
+  };
+
+  applyStylesToEl(el, styles);
 
   el.addEventListener("click", handleAddInputButtonClick);
 
@@ -170,33 +189,143 @@ const getWinnerName = () => {
   return winnerName;
 };
 
-const makeWinnerScreen = (name) => {
-  const el = document.createElement("DIV");
+const getWinnerGifEl = () => {
+  const el = document.createElement("IMG");
 
-  el.setAttribute("id", WINNE_SCREEN_EL_ID);
+  el.setAttribute("src", "./win.gif");
+
+  const styles = {
+    display: "block",
+    width: "100%",
+    height: "100%",
+  };
+
+  applyStylesToEl(el, styles);
+
+  return el;
+};
+
+const getWinnerTextEl = (name, color = "white") => {
+  const el = document.createElement("DIV");
 
   el.textContent = name;
 
-  applyStylePropToEl(el, "position", "fixed");
-  applyStylePropToEl(el, "width", "500px");
-  applyStylePropToEl(el, "height", "500px");
-  applyStylePropToEl(el, "top", "50%");
-  applyStylePropToEl(el, "left", "50%");
-  applyStylePropToEl(el, "transform", "translate(-50%, -50%)");
-  applyStylePropToEl(el, "text-align", "center");
-  applyStylePropToEl(el, "font-weight", "bold");
-  applyStylePropToEl(el, "font-size", "80px");
-  applyStylePropToEl(el, "line-height", "500px");
+  const styles = {
+    "text-align": "center",
+    "font-weight": "bold",
+    "font-size": "80px",
+    "line-height": "100px",
+    color,
+  };
+
+  applyStylesToEl(el, styles);
+
+  return el;
+};
+
+const getFireworkEl = (top, left) => {
+  const el = document.createElement("IMG");
+
+  el.setAttribute("src", "./fireworks_1.gif");
+
+  const styles = {
+    position: "absolute",
+    top,
+    left,
+    width: "300px",
+    height: "300px",
+  };
+
+  applyStylesToEl(el, styles);
+
+  return el;
+};
+
+const makeWinnerScreen = (name) => {
+  const el = document.createElement("DIV");
+
+  el.setAttribute("id", WINNER_SCREEN_EL_ID);
+
+  const styles = {
+    position: "fixed",
+    display: "flex",
+    "justify-content": "center",
+    "align-items": "center",
+    width: "800px",
+    height: "600px",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    "background-image": "url('./win.gif')",
+    "background-size": "25% 20%",
+  };
+
+  applyStylesToEl(el, styles);
+
+  appendElementToNode(el, getFireworkEl("50px", "0px"));
+  appendElementToNode(el, getFireworkEl("-50px", "600px"));
+  appendElementToNode(el, getFireworkEl("450px", "150px"));
+  appendElementToNode(el, getWinnerTextEl(name));
 
   appendElementToNode(getRootNode(), el);
+};
+
+const removeWinnerCounter = () => {
+  document.getElementById(WINNER_COUNTER_EL_ID).remove();
+};
+
+const decreaseCounter = () => {
+  const SECOND_IN_MS = 1000;
+  const el = document.querySelector(`#${WINNER_COUNTER_EL_ID} div`);
+  const value = el.textContent;
+
+  const timeout = setTimeout(() => {
+    decreaseCounter();
+  }, SECOND_IN_MS);
+
+  if (value <= 1) {
+    const winnerName = getWinnerName();
+
+    removeWinnerCounter();
+    makeWinnerScreen(winnerName);
+
+    clearTimeout(timeout);
+  } else {
+    el.textContent -= 1;
+  }
+};
+
+const makeWinnerCounter = () => {
+  const INITIAL_COUNT = 4;
+  const COUNTER_COLOR = "black";
+  const el = document.createElement("DIV");
+
+  el.setAttribute("id", WINNER_COUNTER_EL_ID);
+
+  const styles = {
+    position: "fixed",
+    display: "flex",
+    "justify-content": "center",
+    "align-items": "center",
+    width: "800px",
+    height: "600px",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+  };
+
+  applyStylesToEl(el, styles);
+
+  appendElementToNode(el, getWinnerTextEl(INITIAL_COUNT, COUNTER_COLOR));
+  appendElementToNode(getRootNode(), el);
+
+  decreaseCounter();
 };
 
 const handleSubmitButtonClick = () => {
   removeWinnerScreen();
 
-  const winnerName = getWinnerName();
-
-  makeWinnerScreen(winnerName);
+  makeWinnerCounter();
 };
 
 const makeSubmitButton = () => {
@@ -204,15 +333,19 @@ const makeSubmitButton = () => {
 
   el.textContent = "Submit";
 
-  applyStylePropToEl(el, "display", "block");
-  applyStylePropToEl(el, "padding", "5px");
-  applyStylePropToEl(el, "margin-top", "10px");
-  applyStylePropToEl(el, "width", "200px");
-  applyStylePropToEl(el, "line-height", "20px");
-  applyStylePropToEl(el, "border-radius", "5px");
-  applyStylePropToEl(el, "border", "none");
-  applyStylePropToEl(el, "background-color", "lightgreen");
-  applyStylePropToEl(el, "cursor", "pointer");
+  const styles = {
+    display: "block",
+    padding: "5px",
+    "margin-top": "10px",
+    width: "200px",
+    "line-height": "20px",
+    "border-radius": "5px",
+    border: "none",
+    "background-color": "lightgreen",
+    cursor: "pointer",
+  };
+
+  applyStylesToEl(el, styles);
 
   el.addEventListener("click", handleSubmitButtonClick);
 
@@ -224,7 +357,11 @@ const makeHeading = () => {
 
   el.textContent = "Random Ryan";
 
-  applyStylePropToEl(el, "margin-top", "0");
+  const styles = {
+    "margin-top": "0",
+  };
+
+  applyStylesToEl(el, styles);
 
   appendElementToNode(getRootNode(), el);
 };
@@ -233,11 +370,15 @@ const makeRoot = () => {
   const el = document.createElement("DIV");
   el.setAttribute("id", ROOT_EL_ID);
 
-  applyStylePropToEl(el, "position", "relative");
-  applyStylePropToEl(el, "box-sizing", "border-box");
-  applyStylePropToEl(el, "padding", "10px");
-  applyStylePropToEl(el, "width", "100%");
-  applyStylePropToEl(el, "min-height", "100vh");
+  const styles = {
+    position: "relative",
+    "box-sizing": "border-box",
+    padding: "10px",
+    width: "100%",
+    "min-height": "100vh",
+  };
+
+  applyStylesToEl(el, styles);
 
   appendElementToNode(document.body, el);
 };
@@ -245,8 +386,12 @@ const makeRoot = () => {
 const resetBodyStyles = () => {
   const el = document.body;
 
-  applyStylePropToEl(el, "margin", "0");
-  applyStylePropToEl(el, "padding", "0");
+  const styles = {
+    margin: "0",
+    padding: "0",
+  };
+
+  applyStylesToEl(el, styles);
 };
 
 const initApp = () => {
